@@ -6,6 +6,7 @@ namespace GitOp
 {
     public class GitOperation : IGitOperation
     {
+        
         public string GetHisFile(string path, string commitSHA)
         {
             throw new System.NotImplementedException();
@@ -39,6 +40,7 @@ namespace GitOp
                 Console.WriteLine($"Message: {commits.MessageShort}");
                 Console.WriteLine($"Author: {commits.Author.Name}");
                 Console.WriteLine($"Time: {commits.Author.When.ToLocalTime()}");
+                Console.WriteLine(commits.Tree.ToString());
             }
 
 
