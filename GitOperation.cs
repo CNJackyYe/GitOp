@@ -21,8 +21,12 @@ namespace GitOp
                     Console.WriteLine(b.FriendlyName);
                 }
                 var res =new List<Commit>();
+                var fistCommitId = string.Empty;
                 foreach (var commit in repo.Commits)
                 {
+                    if(fistCommitId == string.Empty){
+                        fistCommitId = commit.Id.ToString();
+                    }
                     Console.WriteLine(
                         $"{commit.Id.ToString().Substring(0, 7)} " +
                         $"{commit.Author.When.ToLocalTime()} " +
@@ -30,7 +34,7 @@ namespace GitOp
                         $"{commit.Author.Name}");
                 }
 
-                var commits = repo.Lookup<Commit>("92061c4");
+                var commits = repo.Lookup<Commit>(fistCommitId);
                 Console.WriteLine($"Commit Full ID: {commits.Id}");
                 Console.WriteLine($"Message: {commits.MessageShort}");
                 Console.WriteLine($"Author: {commits.Author.Name}");
