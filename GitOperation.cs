@@ -1,16 +1,30 @@
 using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
+using System.IO;
 using GitOp.Models;
 using LibGit2Sharp;
+using Walterlv.GitDemo;
+
 namespace GitOp
 {
     public class GitOperation : IGitOperation
     {
 
-        public string GetHisFile(string path, string commitSHA)
+        public string GetHisFile(string path, string ofile,string nfile, string commitSHA)
         {
-            throw new System.NotImplementedException();
+            ExcuceGitComind(path,ofile,nfile,commitSHA);
+            var content = ReadFile(path,nfile);
+            return content;
+        }
+
+        private void ExcuceGitComind(string path, string ofile,string nfile, string commitSHA){
+            var git = new CommandRunner("git", path);
+            var result = git.Run($"cat-file -p {commitSHA}:./{ofile} > {nfile}");
+        }
+
+        private string ReadFile(string path,string nfile){
+            var content = File.ReadAllText(path+nfile);
+            return content;
         }
 
         public List<CommitMsg> GetList(string path)

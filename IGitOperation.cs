@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using GitOp.Models;
 
 namespace GitOp{
-    public interface IGitOperation{
+    public interface IGitOperation
+    {
         string InitRepository(string path);
         List<CommitMsg> GetList(string path);
-        string GetHisFile(string path,string commitSHA);
+        string GetHisFile(string path, string ofile,string nfile, string commitSHA);
         string UpFileToGit(string opath,string npath);
-
     }
 }
