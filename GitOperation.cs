@@ -10,34 +10,53 @@ namespace GitOp
     public class GitOperation : IGitOperation
     {
 
-        public string GetHisFile(string path, string ofile,string nfile, string commitSHA)
+        public string GetHisFile(string path, string ofile, string nfile, string commitSHA)
         {
-            ExcuceGitComind(path,ofile,nfile,commitSHA);
-            var content = ReadFile(path,nfile);
+            ExcuceGitComind(path, ofile, nfile, commitSHA);
+            var content = ReadFile(path, nfile);
             return content;
         }
 
-        private void ExcuceGitComind(string path, string ofile,string nfile, string commitSHA){
+        private void ExcuceGitComind(string path, string ofile, string nfile, string commitSHA)
+        {
             var git = new CommandRunner("git", path);
             var result = git.Run($"cat-file -p {commitSHA}:./{ofile} > {nfile}");
         }
 
-        private string ReadFile(string path,string nfile){
-            var content = File.ReadAllText(path+nfile);
+        private string ReadFile(string path, string nfile)
+        {
+            var content = File.ReadAllText(path + nfile);
             return content;
         }
 
-        public List<CommitMsg> GetList(string path)
+        public List<CommitMsg> GetFileCommits(string path, string filename)
         {
             using (var repo = new Repository(path))
             {
-                var branches = repo.Branches;
-                foreach (var b in branches)
-                {
-                    Console.WriteLine(b.FriendlyName);
-                }
+                //var branches = repo.Branches;
                 var res = new List<CommitMsg>();
-                var fistCommitId = string.Empty;
+                var fileLogs = repo.Commits.QueryBy(path + filename);
+                foreach (var log in fileLogs)
+                {
+                    var commit = log.Commit;
+                    res.Add(new CommitMsg
+                    {
+                        Id = commit.Id.ToString(),
+                        Message = commit.Message,
+                        MessageShort = commit.MessageShort,
+                        Author = commit.Author.Name,
+                        Time = commit.Author.When.ToLocalTime().ToString("yyyy-MM-dd HH:mm:ss")
+                    });
+                }
+                return res;
+            }
+        }
+
+        public List<CommitMsg> GetReposCommits(string path){
+            using (var repo = new Repository(path))
+            {
+                //var branches = repo.Branches;
+                var res = new List<CommitMsg>();
                 foreach (var commit in repo.Commits)
                 {
                     res.Add(new CommitMsg

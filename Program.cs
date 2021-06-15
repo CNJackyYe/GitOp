@@ -7,11 +7,12 @@ namespace GitOp
     {
         static void Main(string[] args)
         {
-            Console.WriteLine(Environment.CurrentDirectory+@"\oxml.xml");
+            Console.WriteLine(Environment.CurrentDirectory);
             var op = new GitOperation();
-            var commits = op.GetList(Environment.CurrentDirectory);
-            Console.WriteLine(JsonConvert.SerializeObject(commits));
-            var commitid = commits[0].Id;
+            var reposCommits = op.GetReposCommits(Environment.CurrentDirectory);
+            var fileCommits = op.GetFileCommits(Environment.CurrentDirectory,@"\oxml.xml");
+            Console.WriteLine(JsonConvert.SerializeObject(fileCommits));
+            var commitid = reposCommits[0].Id;
             // var filecontent = 
             // Console.WriteLine("Hello World!");
         }
